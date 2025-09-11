@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON STUDIO</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-black: #0a0a0a;
+            --primary-white: #ffffff;
+            --accent-gray: #333;
+            --neon-glow: rgba(255, 255, 255, 0.8);
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--primary-black);
+            color: var(--primary-white);
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* 커스텀 커서 */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+        
+        /* 대각선 헤더 */
+        .diagonal-header {
+            position: fixed;
+            top: -50px;
+            left: -50px;
+            width: 300px;
+            height: 150px;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            transform: rotate(15deg);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo-text {
+            color: #000;
+            font-size: 24px;
+            font-weight: 700;
+            transform: rotate(-15deg);
+            letter-spacing: -1px;
+        }
+        
+        /* 플로팅 내비게이션 */
+        .floating-nav {
+            position: fixed;
+            top: 50%;
+            right: 50px;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            width: 15px;
+            height: 15px;
+            background: white;
+            margin: 20px 0;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .nav-item:hover {
+            transform: scale(2);
+            background: transparent;
+            border: 2px solid white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-item:hover::after {
+            transform: scale(1.5);
+            opacity: 0.3;
+        }
+        
+        /* 히어로 섹션 */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(ellipse at center, #111 0%, #000 100%);
+            overflow: hidden;
+        }
+        
+        /* 움직이는 배경 그리드 */
+        .animated-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveGrid 20s linear infinite;
+        }
+        
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: -3px;
+            line-height: 0.9;
+            background: linear-gradient(45deg, #fff, #ccc, #fff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #999;
+            margin-bottom: 50px;
+            letter-spacing: 2px;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .cta-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            padding: 18px 45px;
+            background: transparent;
+            border: 2px solid #fff;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: none;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            background: #fff;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+        
+        .cta-secondary {
+            background: #fff;
+            color: #000;
+        }
+        
+        .cta-secondary:hover {
+            background: transparent;
+            color: #fff;
+        }
+        
+        /* 3D 플로팅 오브젝트 */
+        .floating-objects {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        
+        .floating-object {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: float3d 8s ease-in-out infinite;
+        }
+        
+        .object-1 {
+            width: 120px;
+            height: 120px;
+            top: 15%;
+            right: 15%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05));
+            transform: rotate3d(1, 1, 0, 45deg);
+            animation-delay: 0s;
+        }
+        
+        .object-2 {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            left: 20%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+            animation-delay: 2s;
+        }
+        
+        .object-3 {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            right: 25%;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+            animation-delay: 4s;
+        }
+        
+        @keyframes float3d {
+            0%, 100% { 
+                transform: translateY(0) rotateX(0deg) rotateY(0deg);
+                opacity: 0.6;
+            }
+            25% { 
+                transform: translateY(-30px) rotateX(90deg) rotateY(45deg);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-60px) rotateX(180deg) rotateY(90deg);
+                opacity: 0.8;
+            }
+            75% { 
+                transform: translateY(-30px) rotateX(270deg) rotateY(135deg);
+                opacity: 1;
+            }
+        }
+        
+        /* 인터랙티브 섹션 */
+        .interactive-section {
+            padding: 150px 50px;
+            background: linear-gradient(180deg, #000 0%, #111 50%, #000 100%);
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 80px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 50px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .feature-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            margin-bottom: 30px;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            transition: all 0.4s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: rotate(180deg) scale(1.1);
+            background: #000;
+        }
+        
+        .feature-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .feature-text {
+            color: #ccc;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+        
+        /* 매그네틱 팝업 버튼 */
+        .magnetic-popup-trigger {
+            position: fixed;
+            bottom: 60px;
+            right: 60px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #fff, #f0f0f0);
+            border: none;
+            border-radius: 50%;
+            cursor: none;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        .magnetic-popup-trigger::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #fff, transparent) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .magnetic-popup-trigger:hover {
+            transform: scale(1.1);
+            background: #000;
+            box-shadow: 0 20px 50px rgba(255, 255, 255, 0.4);
+        }
+        
+        .popup-icon {
+            font-size: 2rem;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+        
+        .magnetic-popup-trigger:hover .popup-icon {
+            color: #fff;
+            transform: rotate(135deg);
+        }
+        
+        /* 글래스모피즘 팝업 */
+        .glassmorphism-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glassmorphism-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 80px 60px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            transform: scale(0.8) rotateX(10deg);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+        }
+        
+        .glassmorphism-popup.active .popup-content {
+            transform: scale(1) rotateX(0deg);
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 30px;
+            right: 35px;
+            background: none;
+            border: none;
+            font-size: 2.5rem;
+            cursor: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .popup-close:hover {
+            transform: rotate(90deg) scale(1.2);
+            color: #ff6b6b;
+        }
+        
+        .popup-title {
+            font-size: 2.8rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+            background: linear-gradient(45deg, #fff, #ccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .popup-text {
+            line-height: 1.8;
+            margin-bottom: 50px;
+            color: #ddd;
+            font-size: 1.2rem;
+        }
+        
+        .popup-buttons {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .popup-button {
+            padding: 15px 35px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: none;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+        }
+        
+        .popup-button:hover {
+            background: #fff;
+            color: #000;
+            transform: translateY(-2px);
+        }
+        
+        .popup-button.primary {
+            background: #fff;
+            color: #000;
+        }
+        
+        .popup-button.primary:hover {
+            background: transparent;
+            color: #fff;
+        }
+        
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .interactive-section {
+                padding: 100px 30px;
+            }
+            
+            .popup-content {
+                padding: 60px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 커스텀 커서 -->
+    <div class="custom-cursor"></div>
+    
+    <!-- 대각선 헤더 -->
+    <div class="diagonal-header">
+        <div class="logo-text">NEON</div>
+    </div>
+    
+    <!-- 플로팅 내비게이션 -->
+    <div class="floating-nav">
+        <div class="nav-item"></div>
+        <div class="nav-item"></div>
+        <div class="nav-item"></div>
+        <div class="nav-item"></div>
+    </div>
+    
+    <!-- 히어로 섹션 -->
+    <div class="hero-section">
+        <div class="animated-grid"></div>
+        
+        <div class="floating-objects">
+            <div class="floating-object object-1"></div>
+            <div class="floating-object object-2"></div>
+            <div class="floating-object object-3"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">FUTURE<br>IS NOW</h1>
+            <p class="hero-subtitle">혁신적인 디지털 경험을 창조합니다</p>
+            <div class="cta-container">
+                <button class="cta-button">DISCOVER</button>
+                <button class="cta-button cta-secondary">EXPLORE</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 인터랙티브 섹션 -->
+    <div class="interactive-section">
+        <h2 class="section-title">Experience Magic</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon"></div>
+                <h3 class="feature-title">Interactive Design</h3>
+                <p class="feature-text">사용자와 교감하는 살아있는 인터페이스를 통해 몰입감 넘치는 디지털 경험을 제공합니다.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"></div>
+                <h3 class="feature-title">3D Animations</h3>
+                <p class="feature-text">차원을 넘나드는 3D 애니메이션으로 평면을 뛰어넘는 시각적 스토리텔링을 구현합니다.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"></div>
+                <h3 class="feature-title">Future Tech</h3>
+                <p class="feature-text">최신 웹 기술과 AI를 활용하여 미래지향적이고 혁신적인 솔루션을 개발합니다.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 매그네틱 팝업 버튼 -->
+    <button class="magnetic-popup-trigger" onclick="openPopup()">
+        <div class="popup-icon">✦</div>
+    </button>
+    
+    <!-- 글래스모피즘 팝업 -->
+    <div class="glassmorphism-popup" id="popupOverlay">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closePopup()">&times;</button>
+            <h3 class="popup-title">Connect With Us</h3>
+            <p class="popup-text">
+                미래를 함께 만들어갈 파트너를 찾고 있습니다.<br>
+                혁신적인 아이디어로 세상을 바꿔보세요.
+            </p>
+            <div class="popup-buttons">
+                <button class="popup-button primary" onclick="closePopup()">START PROJECT</button>
+                <button class="popup-button" onclick="closePopup()">LEARN MORE</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 커스텀 커서
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function updateCursor() {
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+        
+        // 호버 효과
+        document.querySelectorAll('button, .nav-item, .feature-card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2)');
+            el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+        });
+        
+        // 매그네틱 효과
+        const magneticBtn = document.querySelector('.magnetic-popup-trigger');
+        magneticBtn.addEventListener('mousemove', (e) => {
+            const rect = magneticBtn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            magneticBtn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.1)`;
+        });
+        
+        magneticBtn.addEventListener('mouseleave', () => {
+            magneticBtn.style.transform = 'translate(0, 0) scale(1)';
+        });
+        
+        // 팝업 함수들
+        function openPopup() {
+            document.getElementById('popupOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closePopup() {
+            document.getElementById('popupOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 팝업 오버레이 클릭
+        document.getElementById('popupOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closePopup();
+        });
+        
+        // ESC 키
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePopup();
+        });
+        
+        // 스크롤 패럴랙스
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroObjects = document.querySelectorAll('.floating-object');
+            
+            heroObjects.forEach((obj, i) => {
+                const speed = (i + 1) * 0.1;
+                obj.style.transform += ` translateY(${scrolled * speed}px)`;
+            });
+            
+            // 그리드 애니메이션 속도 조절
+            const grid = document.querySelector('.animated-grid');
+            grid.style.transform = `translate(${scrolled * 0.1}px, ${scrolled * 0.1}px)`;
+        });
+        
+        // 네비게이션 인터랙션
+        document.querySelectorAll('.nav-item').forEach((item, index) => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.style.background = 'white';
+                    nav.style.transform = 'scale(1)';
+                });
+                
+                item.style.background = 'transparent';
+                item.style.border = '2px solid white';
+                item.style.transform = 'scale(1.5)';
+            });
+        });
+        
+        // 인터섹션 옵저버로 애니메이션 트리거
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+        
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
