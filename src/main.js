@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
-import './myStyle.css';
+// import './myStyle.css';
 import App from './App.vue';
-import router from './router';
+// import router from './router';
 
 // const KAKAO_KEY = 'bc01776282be27087c9cd7c4d30a43ff';
 
@@ -12,6 +12,6 @@ import router from './router';
 // console.log(Kakao.isInitialized());
 
 const app = createApp(App);
-app.use(router);
+// app.use(router);
 
 app.mount('#app');
