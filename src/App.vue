@@ -1,9 +1,15 @@
 <template>
   <TimingGame />
+  <hr />
   <MenuGame />
+  <hr />
   <MiniGame />
+  <hr />
   <MoveGame />
+  <hr />
   <RandomGame />
+
+  <v-modal />
 </template>
 
 <script setup>
@@ -12,6 +18,8 @@ import MenuGame from './views/game/MenuGame.vue';
 import MiniGame from './views/game/MiniGame.vue';
 import MoveGame from './views/game/MoveGame.vue';
 import RandomGame from './views/game/RandomGame.vue';
+
+import VModal from './components/VModal.vue';
 </script>
 <style>
 body {

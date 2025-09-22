@@ -1,31 +1,37 @@
 <template>
   <h1>🐭 피하기 게임</h1>
   <p>마우스로 초록 상자를 움직여 빨간 장애물 피하기!</p>
+  <div v-show="gameOver" ref="boxRef" id="thumbnailBox" @click="startGame">
+    클릭하여 시작하기
+  </div>
   <canvas
+    v-show="!gameOver"
     id="gameCanvas"
     width="400"
     height="300"
     ref="canvasRef"
     @mousemove="onMouseMove"
   ></canvas>
-  <div id="score">점수: 0</div>
+  <div id="score">레벨: {{ level }}</div>
+  <div id="score">점수: {{ score }}</div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import modalStore from '@/stores/modalStore';
+
+const $modal = modalStore();
 
 const canvasRef = ref();
 
 let ctx;
 let player = { x: 180, y: 250, w: 40, h: 40 };
-let obstacle = { x: Math.random() * 360, y: 0, w: 40, h: 40, speed: 3 };
-let score = 0;
-let gameOver = false;
+let obstacle;
+let score = ref(0);
+let gameOver = ref(true);
+let level = ref(1);
 
-onMounted(() => {
-  ctx = canvasRef.value.getContext('2d');
-  loop();
-});
+onMounted(() => {});
 
 const onMouseMove = (e) => {
   const rect = canvasRef.value.getBoundingClientRect();
@@ -41,13 +47,17 @@ const draw = () => {
 };
 
 const update = () => {
-  if (gameOver) return;
+  if (gameOver.value) return;
   obstacle.y += obstacle.speed;
   if (obstacle.y > canvasRef.value.height) {
     obstacle.y = 0;
     obstacle.x = Math.random() * (canvasRef.value.width - obstacle.w);
-    score++;
-    document.getElementById('score').textContent = `점수: ${score}`;
+    score.value++;
+    if (score.value >= 10) {
+      level.value++;
+      obstacle.speed += 2;
+      score.value = 0;
+    }
   }
   if (
     player.x < obstacle.x + obstacle.w &&
@@ -55,15 +65,25 @@ const update = () => {
     player.y < obstacle.y + obstacle.h &&
     player.y + player.h > obstacle.y
   ) {
-    gameOver = true;
-    alert(`💥 게임 오버! 최종 점수: ${score}`);
+    gameOver.value = true;
+    $modal.openModal(` 레벨: ${level.value}<br/>점수: ${score.value}`);
   }
+};
+
+const startGame = () => {
+  gameOver.value = false;
+
+  ctx = canvasRef.value.getContext('2d');
+
+  obstacle = { x: Math.random() * 360, y: 0, w: 40, h: 40, speed: 3 };
+
+  loop();
 };
 
 const loop = (timeStamp) => {
   draw();
   update();
-  if (!gameOver) requestAnimationFrame(loop);
+  if (!gameOver.value) requestAnimationFrame(loop);
 };
 </script>
 
@@ -71,5 +91,17 @@ const loop = (timeStamp) => {
 #score {
   font-size: 24px;
   margin-top: 10px;
+}
+
+#thumbnailBox {
+  width: 400px;
+  height: 300px;
+  margin: 0 auto;
+  background-color: #707070;
+  line-height: 300px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  user-select: none;
 }
 </style>

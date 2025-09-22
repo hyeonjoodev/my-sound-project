@@ -1,7 +1,9 @@
 <template>
   <h1>🎮 10초 클릭 게임</h1>
 
-  <button class="button" @click="onGameBtnClick">10초 클릭 게임 시작!</button>
+  <button class="button" @click="onGameBtnClick" ref="btnRef">
+    {{ btnTitle }}
+  </button>
   <div id="gameScore">🏆 점수: {{ gameScore }}</div>
 </template>
 
@@ -11,15 +13,18 @@ import { ref } from 'vue';
 // 클릭 게임
 let score = 0;
 let gameRunning = false;
-const gameBtn = document.getElementById('gameBtn');
+
+const btnRef = ref();
+const btnTitle = ref('10초 클릭 게임 시작!');
 const gameScore = ref(0);
 
+let start = Date.now();
 const onGameBtnClick = () => {
   if (!gameRunning) {
     score = 0;
     gameRunning = true;
     gameScore.value = 0;
-    const start = Date.now();
+    start = Date.now();
     const interval = setInterval(() => {
       if (Date.now() - start >= 10000) {
         // 10초
@@ -31,8 +36,9 @@ const onGameBtnClick = () => {
   } else {
     if (gameRunning) score++;
     gameScore.value = score;
-    gameBtn.classList.add('clicking');
-    setTimeout(() => gameBtn.classList.remove('clicking'), 100);
+    btnRef.value.classList.add('clicking');
+    btnTitle.value = Date.now() - start;
+    setTimeout(() => btnRef.value.classList.remove('clicking'), 100);
   }
 };
 </script>
