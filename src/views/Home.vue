@@ -1,8 +1,18 @@
 <template>
   <section>
-    <h1>HOME</h1>
-    <p>안니옹하세요</p>
-    <p>여기는 메인 페이지이어요</p>
-    <p>무엇이 들어갈까요?</p>
+    <p style="font-size: 12px; margin-top: 50px">기다리고있었습니다...</p>
+    <p style="font-size: 16px">제대로 모시겠습니자</p>
+
+    <h1>🎉김유미의 바지쑈👖</h1>
+    <p class="gradient">뭔가 보여드리겠습니다</p>
   </section>
 </template>
+
+<style scoped>
+.gradient {
+  font-size: 20px;
+  background: linear-gradient(to right, #2014ff, #ff9810);
+  color: transparent;
+  background-clip: text;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <header id="header">
-    <h1>🍊 제목 뭐로하지</h1>
+    <h1>🍊 미니게임 저장소</h1>
   </header>
 </template>
 
