@@ -87,7 +87,7 @@ const loop = (timeStamp) => {
 };
 </script>
 
-<style>
+<style scoped>
 #score {
   font-size: 24px;
   margin-top: 10px;

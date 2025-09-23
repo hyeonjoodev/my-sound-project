@@ -1,16 +1,26 @@
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff')
+    format('woff');
+  font-weight: 500;
+  font-display: swap;
+}
+
 /* 기본 레이아웃 */
 body {
   margin: 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-body {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: 'GMarketSans', 'Noto Sans', sans-serif;
   background-color: #fff8f0;
   text-align: center;
   padding: 40px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 h1 {
@@ -27,9 +37,46 @@ h1 {
   cursor: pointer;
   font-size: 18px;
   transition: 0.2s;
+
+  &.orange {
+    background-color: #ffab91;
+  }
+
+  &.purple {
+    background-color: #cc66ff;
+  }
+
+  &.blue {
+    background-color: #99a7f5;
+  }
 }
 .button:hover {
   background-color: #ff8a65;
+}
+
+.button-group {
+  .footer-nav {
+    display: flex;
+    gap: 10px;
+  }
+
+  .button {
+    background-color: #f37348;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+}
+
+.result-text {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #555;
 }
 
 canvas {
@@ -47,12 +94,12 @@ canvas {
   align-items: center;
   padding-left: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
 
-#header h1 {
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
+  h1 {
+    color: white;
+    font-weight: bold;
+    margin: 0;
+  }
 }
 
 /* 푸터 */
@@ -75,6 +122,10 @@ canvas {
   gap: 10px;
 }
 .footerBtn {
+  display: flex; /* 내부 아이콘+텍스트 정렬 */
+  align-items: center; /* 세로 중앙 */
+  gap: 6px; /* 아이콘과 글자 사이 여백 */
+
   background: #ffcc80;
   border: none;
   border-radius: 6px;
@@ -89,6 +140,13 @@ canvas {
 /* 텍스트 숨김 (기본 좁을 때) */
 .footerBtn span {
   display: inline;
+}
+/* 아이콘 크기 */
+.footerBtn .footerIcon {
+  width: 14px;
+  height: 14px;
+
+  display: block; /* baseline 영향 제거 */
 }
 
 /* 모바일 반응형 */

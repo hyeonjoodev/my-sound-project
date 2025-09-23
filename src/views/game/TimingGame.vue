@@ -1,10 +1,14 @@
 <template>
   <h1>⚡ 반응 속도 테스트</h1>
-  <p>화면이 초록색으로 바뀌면 스페이스바 누르기!</p>
-  <div ref="boxRef" id="testBox" @click="startTest">
-    {{ boxObject.text }}
+  <p>화면이 <span style="color: green">초록색</span>으로 바뀌면 클릭!</p>
+  <div ref="boxRef" class="testBox" @click="onClickBox">
+    <div class="textWrapper">
+      <span class="center-text"> {{ gameData.text }} </span>
+      <span class="result-text">
+        {{ !!gameData.result ? `🏁 반응 속도:${gameData.result}ms` : '' }}
+      </span>
+    </div>
   </div>
-  <p id="result">{{ boxObject.resultText }}</p>
 </template>
 
 <script setup>
@@ -12,60 +16,96 @@ import { reactive, ref } from 'vue';
 
 const boxRef = ref();
 
-const boxObject = reactive({
-  text: '대기중...',
+const gameData = reactive({
+  text: '대기중...', // 메인 텍스트
+  result: '', // 반응 속도
   color: '#87cefa',
-  ready: false,
+  isStart: false,
+  isReady: false,
   delay: null,
-  startTime: 0,
-  resultText: '🏁 반응 속도: -'
+  startTime: 0
 });
 
+let timer = null;
+
+const onClickBox = () => {
+  if (!gameData.isStart) {
+    startTest();
+  } else {
+    endTest();
+  }
+};
+
 const startTest = () => {
-  boxObject.text = '준비…';
+  gameData.isStart = true;
+  gameData.isReady = false;
+  gameData.result = null;
+  gameData.startTime = null;
+
+  gameData.text = '준비…';
   boxRef.value.style.background = '#87cefa';
-  boxObject.ready = false;
-  boxObject.delay = Math.random() * 3000 + 1000;
-  console.log('start!');
-  setTimeout(() => {
+
+  gameData.delay = Math.random() * 3000 + 1000;
+  timer = setTimeout(() => {
     boxRef.value.style.background = '#32cd32';
-    boxObject.text = '지금!';
-    boxObject.startTime = Date.now();
-    boxObject.ready = true;
-  }, boxObject.delay);
+    gameData.text = '지금!';
+    gameData.startTime = Date.now();
+    gameData.isReady = true;
+  }, gameData.delay);
 };
 
 const endTest = () => {
-  boxObject.text = '다시 시작하기';
-  boxRef.value.style.background = '#707070';
-  boxObject.ready = false;
-};
+  gameData.result = gameData.startTime ? Date.now() - gameData.startTime : 0;
 
-document.body.onkeydown = (e) => {
-  console.log('key down');
-  if (e.code === 'Space') {
-    if (boxObject.ready) {
-      const reaction = Date.now() - boxObject.startTime;
-      boxObject.resultText = `🏁 반응 속도: ${reaction}ms`;
-    } else {
-      boxObject.resultText = '⛔ 너무 빨리 눌렀어요!';
-    }
-    endTest();
+  clearTimeout(timer);
+  gameData.isStart = false;
+
+  boxRef.value.style.background = '#707070';
+  gameData.isReady = false;
+
+  if (gameData.result) {
+    gameData.text = '🤗 잘했어요!';
+    boxRef.value.style.background = '#6678ff';
+  } else {
+    gameData.text = '🚫 너무 빨랐어요!';
+    boxRef.value.style.background = '#ff7265';
   }
 };
 </script>
 
-<style>
-#testBox {
+<style scoped>
+.testBox {
   width: 300px;
   height: 300px;
-  margin: 0 auto;
+  margin: 20px auto;
   background-color: #707070;
   border-radius: 20px;
-  line-height: 300px;
   font-size: 24px;
   color: white;
   cursor: pointer;
   user-select: none;
+
+  display: flex;
+  justify-content: center; /* wrapper 중앙 정렬 */
+  align-items: center; /* wrapper 중앙 정렬 */
+}
+
+.textWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* text 가로 중앙 */
+  .center-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .result-text {
+    color: white;
+    font-size: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4px; /* mainText 바로 아래 */
+  }
 }
 </style>

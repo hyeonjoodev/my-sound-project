@@ -2,7 +2,7 @@
   <h1>🍱 오늘 점심</h1>
 
   <button class="button" @click="onMenuBtnClick">오늘 점심 뭐 먹지?</button>
-  <div id="menuResult">{{ menuResult }}</div>
+  <div class="result-text">{{ menuResult }}</div>
   <img
     id="menuImg"
     :src="menuImgSrc"
@@ -38,18 +38,11 @@ const onMenuBtnClick = () => {
   isShowMenuImg.value = true;
 };
 </script>
-<style>
-#menuResult {
-  margin-top: 20px;
-  font-size: 22px;
-  font-weight: bold;
-  color: #555;
-}
+<style scoped>
 #menuImg {
-  margin-top: 15px;
   max-width: 200px;
   border-radius: 12px;
   display: block;
-  margin: 15px auto;
+  margin: auto auto 20px auto;
 }
 </style>

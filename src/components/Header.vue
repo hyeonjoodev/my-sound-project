@@ -1,6 +1,6 @@
 <template>
   <header id="header">
-    <h1>🍊 Fun Mini App</h1>
+    <h1>🍊 제목 뭐로하지</h1>
   </header>
 </template>
 

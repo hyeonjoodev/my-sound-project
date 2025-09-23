@@ -5,7 +5,7 @@
   <button class="button" @click="onDiceBtnClick">🎲 주사위 굴리기</button>
   <button class="button" @click="onAsciiBtnClick">🖼️ 랜덤 그림 보기</button>
 
-  <div id="result">{{ resultText }}</div>
+  <div class="result-text">{{ resultText }}</div>
 </template>
 <script setup>
 import { ref } from 'vue';
@@ -42,13 +42,3 @@ const onAsciiBtnClick = () => {
   resultText.value = `랜덤 그림:\n${art}`;
 };
 </script>
-
-<style>
-#result {
-  margin-top: 20px;
-  font-size: 22px;
-  font-weight: bold;
-  color: #555;
-  white-space: pre;
-}
-</style>
