@@ -2,16 +2,16 @@
   <h1>🎮 10초 클릭 게임</h1>
   <p>10초 동안 최대한 많이 버튼 클릭!</p>
 
-  <button class="button" @click="onGameBtnClick" ref="btnRef">
-    {{ btnText }}
-    <!-- 진행중일 때 시간 나와야됨 -->
-    <!-- 대기/진행중 나눠야함 -->
-  </button>
+  <p>{{ btnText }}</p>
 
-  <button class="button blue" @click="reStart" v-if="gameScore">
+  <button class="button" @click="onGameBtnClick" ref="btnRef">
+    {{ gameScore }}
+  </button>
+  <p></p>
+  <button class="button blue" @click="reStart" v-if="isFinish">
     다시 시작하기
   </button>
-  <div class="result-text">{{ gameScore ? `🏆 점수: ${gameScore}` : '' }}</div>
+  <div class="result-text">{{ isFinish ? `🏆 점수: ${gameScore}` : '' }}</div>
 </template>
 
 <script setup>
@@ -20,6 +20,7 @@ import { ref } from 'vue';
 // 클릭 게임
 let score = 0;
 let isGameRunning = ref(false);
+let isFinish = ref(false);
 
 const btnRef = ref();
 const btnText = ref('10초 클릭 게임 시작!');
@@ -36,16 +37,7 @@ const onGameBtnClick = () => {
   }
 };
 
-const readyGame = () => {
-  isReady.value = 3;
-  const interval = setInterval(() => {
-    isReady.value - 1;
-  });
-};
-
 const startGame = () => {
-  score = 0;
-  gameScore.value = 0;
   isGameRunning.value = true;
 
   startTime = Date.now();
@@ -55,25 +47,28 @@ const startGame = () => {
 
   const interval = setInterval(() => {
     time = Date.now() - startTime;
+    btnText.value = `${Math.round(time / 1000)}초`;
     if (time >= 10000) {
       // 10초
       clearInterval(interval);
       btnText.value = '⏰ 10초 끝!';
-      gameScore.value = score;
+      isFinish.value = true;
     }
   }, 50);
 };
 
 const runningGame = () => {
   if (time < 10000) {
-    if (isGameRunning.value) score++;
+    if (isGameRunning.value) gameScore.value++;
     btnRef.value.classList.add('clicking');
-    btnText.value = `${Math.round(time / 1000)}초`;
     setTimeout(() => btnRef.value.classList.remove('clicking'), 100);
   }
 };
 
 const reStart = () => {
+  score = 0;
+  gameScore.value = 0;
+  isFinish.value = false;
   isGameRunning.value = false;
 };
 </script>
