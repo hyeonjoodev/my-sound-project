@@ -22,5 +22,5 @@
 
 <script setup>
 import github from '@/assets/github-mark.svg';
-import instagram from '@/assets/Instagram_Glyph_Gradient.svg';
+import instagram from '@/assets/Instagram_Glyph_Gradient.png';
 </script>
