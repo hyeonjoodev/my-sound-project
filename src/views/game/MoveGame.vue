@@ -11,6 +11,7 @@
     height="300"
     ref="canvasRef"
     @mousemove="onMouseMove"
+    @touchmove="onMouseMove"
   ></canvas>
   <div id="score">레벨: {{ level }}</div>
   <div id="score">점수: {{ score }}</div>
@@ -30,8 +31,25 @@ let obstacle;
 let score = ref(0);
 let gameOver = ref(true);
 let level = ref(1);
+let boxSize = 40;
 
-onMounted(() => {});
+const boxRef = ref();
+onMounted(() => {
+  boxRef.value.style.width = window.innerWidth * 0.5 + 'px';
+  boxRef.value.style.height = window.innerHeight * 0.3 + 'px';
+
+  boxRef.value.style.lineHeight = window.innerHeight * 0.3 + 'px';
+
+  canvasRef.value.width = window.innerWidth * 0.5;
+  canvasRef.value.height = window.innerHeight * 0.3;
+
+  player = {
+    x: canvasRef.value.width - boxSize,
+    y: canvasRef.value.height - boxSize,
+    w: boxSize,
+    h: boxSize
+  };
+});
 
 const onMouseMove = (e) => {
   const rect = canvasRef.value.getBoundingClientRect();
@@ -75,7 +93,7 @@ const startGame = () => {
 
   ctx = canvasRef.value.getContext('2d');
 
-  obstacle = { x: Math.random() * 360, y: 0, w: 40, h: 40, speed: 3 };
+  obstacle = { x: Math.random() * 360, y: 0, w: boxSize, h: boxSize, speed: 3 };
 
   loop();
 };

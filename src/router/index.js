@@ -27,24 +27,24 @@ const router = createRouter({
       component: () => import('@/views/game/MenuGame.vue'),
       meta: { emoji: '🍛', title: '메뉴고르기' }
     },
-    // {
-    //   path: '/move',
-    //   name: 'Move',
-    //   component: () => import('@/views/game/MoveGame.vue'),
-    //   meta: { emoji: '🪓', title: '피하기' }
-    // },
+    {
+      path: '/move',
+      name: 'Move',
+      component: () => import('@/views/game/MoveGame.vue'),
+      meta: { emoji: '🪓', title: '피하기' }
+    },
     {
       path: '/random',
       name: 'Random',
       component: () => import('@/views/game/RandomGame.vue'),
       meta: { emoji: '🔄️', title: '랜덤' }
-    },
-    {
-      path: '/mini',
-      name: 'Mini',
-      component: () => import('@/views/game/MiniGame.vue'),
-      meta: { emoji: '🕑', title: '10초맞추기' }
     }
+    // {
+    //   path: '/mini',
+    //   name: 'Mini',
+    //   component: () => import('@/views/game/MiniGame.vue'),
+    //   meta: { emoji: '🕑', title: '10초맞추기' }
+    // }
   ]
 });
 
