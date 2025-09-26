@@ -13,28 +13,30 @@
 
 <script setup>
 import { ref } from 'vue';
-
-const menuList = [
-  { name: '김치찌개' },
-  { name: '돈까스' },
-  { name: '샌드위치' },
-  { name: '라면' },
-  { name: '볶음밥' },
-  { name: '샐러드' },
-  { name: '피자' },
-  { name: '떡볶이' },
-  { name: '고로케' },
-  { name: '초밥' }
-];
+import menuList from '../../MenuList';
 
 const menuResult = ref('🍴 버튼을 눌러 메뉴 확인!');
 const menuImgSrc = ref('');
 const isShowMenuImg = ref(false);
 
+const catNames = [
+  'louie',
+  'poppy',
+  'bella',
+  'neo_2',
+  'neo_banana',
+  'millie_neo',
+  'neo',
+  'millie'
+];
+
 const onMenuBtnClick = () => {
   const randomMenu = menuList[Math.floor(Math.random() * menuList.length)];
   menuResult.value = '오늘 점심은: ' + randomMenu.name + ' 🍴';
-  menuImgSrc.value = 'https://placecats.com/bella/300/200';
+  menuImgSrc.value =
+    'https://placecats.com/' +
+    catNames[Math.floor(Math.random() * catNames.length)] +
+    '/300/200';
   isShowMenuImg.value = true;
 };
 </script>
