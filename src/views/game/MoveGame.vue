@@ -1,6 +1,6 @@
 <template>
-  <!-- <h1>🐭 피하기 게임</h1>
-  <p>마우스로 초록 상자를 움직여 빨간 장애물 피하기!</p> -->
+  <h1>🐭 피하기 게임</h1>
+  <p>마우스로 초록 상자를 움직여 빨간 장애물 피하기!</p>
   <div v-show="gameOver" ref="boxRef" id="thumbnailBox" @click="startGame">
     클릭하여 시작하기
   </div>
@@ -13,8 +13,8 @@
     @mousemove="onMouseMove"
     @touchmove="onMouseMove"
   ></canvas>
-  <div id="score">레벨: {{ level }}</div>
-  <div id="score">점수: {{ score }}</div>
+
+  <div class="result-text">레벨: {{ level }}</div>
 </template>
 
 <script setup>
@@ -35,15 +35,21 @@ let boxSize = 40;
 
 const boxRef = ref();
 onMounted(() => {
-  boxRef.value.style.width = window.innerWidth * 0.5 + 'px';
-  boxRef.value.style.height = window.innerHeight * 0.3 + 'px';
+  let width = window.innerWidth * 0.6;
+  let height = window.innerHeight * 0.4;
 
-  boxRef.value.style.lineHeight = window.innerHeight * 0.3 + 'px';
+  boxRef.value.style.width = width + 'px';
+  boxRef.value.style.height = height + 'px';
 
-  canvasRef.value.width = window.innerWidth * 0.5;
-  canvasRef.value.height = window.innerHeight * 0.3;
+  boxRef.value.style.lineHeight = height + 'px';
 
-  boxSize = window.innerWidth * 0.03;
+  canvasRef.value.width = width;
+  canvasRef.value.height = height;
+
+  boxSize =
+    window.innerWidth > window.innerHeight
+      ? window.innerHeight * 0.03
+      : window.innerWidth * 0.05;
 
   player = {
     x: canvasRef.value.width - boxSize,
@@ -97,6 +103,7 @@ const update = () => {
 };
 
 const startGame = () => {
+  level.value = 1;
   gameOver.value = false;
 
   ctx = canvasRef.value.getContext('2d');
