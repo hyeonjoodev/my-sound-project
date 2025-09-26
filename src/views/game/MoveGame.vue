@@ -1,6 +1,6 @@
 <template>
-  <h1>🐭 피하기 게임</h1>
-  <p>마우스로 초록 상자를 움직여 빨간 장애물 피하기!</p>
+  <!-- <h1>🐭 피하기 게임</h1>
+  <p>마우스로 초록 상자를 움직여 빨간 장애물 피하기!</p> -->
   <div v-show="gameOver" ref="boxRef" id="thumbnailBox" @click="startGame">
     클릭하여 시작하기
   </div>
@@ -43,6 +43,8 @@ onMounted(() => {
   canvasRef.value.width = window.innerWidth * 0.5;
   canvasRef.value.height = window.innerHeight * 0.3;
 
+  boxSize = window.innerWidth * 0.03;
+
   player = {
     x: canvasRef.value.width - boxSize,
     y: canvasRef.value.height - boxSize,
@@ -53,7 +55,13 @@ onMounted(() => {
 
 const onMouseMove = (e) => {
   const rect = canvasRef.value.getBoundingClientRect();
-  player.x = e.clientX - rect.left - player.w / 2;
+
+  let clientX;
+
+  if (e.type.startsWith('touch')) clientX = e.touches[0].clientX;
+  else clientX = e.clientX;
+
+  player.x = clientX - rect.left - player.w / 2;
 };
 
 const draw = () => {
